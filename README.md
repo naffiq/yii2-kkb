@@ -4,6 +4,8 @@
 Перед использованием рекоммендуется ознакомится с работой и циклом оплаты в 
 [документации банка](https://testpay.kkb.kz/doc/htm/)
 
+Если нашли ошибки или устаревший код то кидайте в issues.
+
 ## Установка
 
 Рекоммендуемый способ установки через [composer](https://getcomposer.org/download/).
@@ -31,9 +33,9 @@ return [
             'class' => 'naffiq\yii2-kkb\KKBPayment',
             
             // Расположение публичного ключа
-            'publicKeyPath' => '@vendor/naffiq/yii2-kkb/test-certificates/test_pub.pem',
+            'publicKeyPath' => '@vendor/naffiq/yii2-kkb/payment-keys/test_pub.pem',
             // Расположение приватного ключа
-            'privateKeyPath' => '@vendor/naffiq/yii2-kkb/test-certificates/test_prv.pem',
+            'privateKeyPath' => '@vendor/naffiq/yii2-kkb/payment-keys/test_prv.pem',
             // Ключевая фраза к приватному ключу
             'privateKeyPassword' => 'nissan',
             
@@ -63,7 +65,7 @@ return [
  */
 $kkbPayment = \Yii::$app->get('kkbPayment');
 
-if (isset(YII_ENV_DEV)) {
+if (YII_ENV_DEV) {
     // Выставляем адрес сервера тестовых платежей
     $paymentUrl = 'https://testpay.kkb.kz/jsp/process/logon.jsp';   
 } else {
