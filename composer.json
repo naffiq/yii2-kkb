@@ -1,0 +1,20 @@
+{
+    "name": "naffiq/yii2-kkb",
+    "description": "Yii2 component for KazKom bank online payment",
+    "require": {
+        "yiisoft/yii2": "^2.0",
+        "rquadling/lalit": "^1.5"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Galymzhan Abdugalimov",
+            "email": "abdu.galymzhan@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "naffiq\\kkb\\": "src"
+        }
+    }
+}
