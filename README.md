@@ -1,2 +1,84 @@
 # yii2-kkb
-Подключение оплаты онлайн в КазКом банке для Yii2
+Компонентя для оплаты онлайн в КазКом банке для Yii2.
+
+Перед использованием рекоммендуется ознакомится с работой и циклом оплаты в 
+[документации банка](https://testpay.kkb.kz/doc/htm/)
+
+## Установка
+
+Рекоммендуемый способ установки через [composer](https://getcomposer.org/download/).
+
+```bash
+$ composer install naffiq/yii2-kkb
+```
+
+## Подключение
+
+Добавьте следующие строки в ваш конфигурационный файл (`app\config\main.php`).
+Данные настройки были из документации и по ним можно тестировать оплату на 
+тестовых серверах ККБ
+
+```php
+<?php
+return [
+    // your config goes here
+    
+    'components' => [
+        
+        // ...
+        
+        'kkbPayment' => [
+            'class' => 'naffiq\yii2-kkb\KKBPayment',
+            
+            // Расположение публичного ключа
+            'publicKeyPath' => '@vendor/naffiq/yii2-kkb/test-certificates/test_pub.pem',
+            // Расположение приватного ключа
+            'privateKeyPath' => '@vendor/naffiq/yii2-kkb/test-certificates/test_prv.pem',
+            // Ключевая фраза к приватному ключу
+            'privateKeyPassword' => 'nissan',
+            
+            // ID онлайн-магазина в системе kkb
+            'merchantId' => '92061101',
+            // ID сертификата онлайн-магазина в системе kkb
+            'merchantCertificateId' => '00C182B189',
+            // Название магазина
+            'merchantName' => 'Test shop',
+        ],
+    ]
+    
+    // ...
+];
+
+```
+
+## Использование
+
+Для того чтобы отправить запрос на оплату в epay, необходимо сформировать форму 
+со следующими полями:
+
+```php
+<?php
+/**
+ * @var $kkbPayment \naffiq\kkb\KKBPayment 
+ */
+$kkbPayment = \Yii::$app->get('kkbPayment');
+
+if (isset(YII_ENV_DEV)) {
+    // Выставляем адрес сервера тестовых платежей
+    $paymentUrl = 'https://testpay.kkb.kz/jsp/process/logon.jsp';   
+} else {
+    // Боевой адрес
+    $paymentUrl = 'https://epay.kkb.kz/jsp/process/logon.jsp';
+}
+
+?>
+<form action="<?= $paymentUrl ?>" id="kkb-payment-form" style="display: none">
+    <input type="text" name="Signed_Order_B64" size="100" value="<?= $kkbPayment->processRequest(ORDER_ID, ORDER_PRICE) ?>">
+    <input type="text" id="em" name="email" size="50" maxlength="50" value="<?= CLINET_EMAIL ?>">
+    <input type="text" name="Language" size="50" maxlength="3" value="rus">
+    <input type="text" name="BackLink" size="50" maxlength="50" value="<?= RETURN_URL ?>">
+    <input type="text" name="PostLink" size="50" maxlength="50" value="<?= PROCESS_RESULT_URL ?>">
+</form>
+
+```
+
