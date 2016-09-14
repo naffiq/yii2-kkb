@@ -24,3 +24,5 @@ $RECYCLE.BIN/
 *.iml
 out
 gen
+
+/vendor/
