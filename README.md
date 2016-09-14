@@ -65,17 +65,26 @@ return [
  */
 $kkbPayment = \Yii::$app->get('kkbPayment');
 
+// В случае ошибки в этом методе могут выбрасываться исключения.
+// В этом случае нужно курить доку и смотреть конфиги
+try {
+    $kkbPaymentBase64 = $kkbPayment->processRequest(ORDER_ID, ORDER_PRICE);
+} catch (\yii\base\Exception $e) {
+    $kkbPaymentBase64 = "";
+    // TODO: Обработка ошибки
+}
+
+// Выставляем адрес сервера платежей в зависимости от окружения
 if (YII_ENV_DEV) {
-    // Выставляем адрес сервера тестовых платежей
     $paymentUrl = 'https://testpay.kkb.kz/jsp/process/logon.jsp';   
 } else {
-    // Боевой адрес
     $paymentUrl = 'https://epay.kkb.kz/jsp/process/logon.jsp';
 }
 
 ?>
+
 <form action="<?= $paymentUrl ?>" id="kkb-payment-form" style="display: none">
-    <input type="text" name="Signed_Order_B64" size="100" value="<?= $kkbPayment->processRequest(ORDER_ID, ORDER_PRICE) ?>">
+    <input type="text" name="Signed_Order_B64" size="100" value="<?= $kkbPaymentBase64 ?>">
     <input type="text" id="em" name="email" size="50" maxlength="50" value="<?= CLINET_EMAIL ?>">
     <input type="text" name="Language" size="50" maxlength="3" value="rus">
     <input type="text" name="BackLink" size="50" maxlength="50" value="<?= RETURN_URL ?>">
@@ -83,4 +92,3 @@ if (YII_ENV_DEV) {
 </form>
 
 ```
-
