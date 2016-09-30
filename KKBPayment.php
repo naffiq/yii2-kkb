@@ -180,7 +180,7 @@ class KKBPayment extends Component
         if (!empty($result['document'])){
             $kkb = new KKBSign();
             $kkb->invert();
-            $data = $response['document']['bank_sign'];
+            $data = $result['document']['bank_sign'];
 
             $check = $kkb->checkSign64($data['@attributes']['cert_id'], $data['@value'], Yii::getAlias($this->publicKeyPath));
 
