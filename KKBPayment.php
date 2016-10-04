@@ -165,43 +165,19 @@ class KKBPayment extends Component
      * Process incoming XML to array of values with verifying digital-key
      *
      * @param string $response XML response from bank
-     * @return array|string
+     * @return null|KKBPaymentResult
      */
     function processResponse($response) {
         $result = XML2Array::createArray($response);
 
-        if (!empty($result["error"])){
-            return [
-                'bankError' => true,
-                'data' => $result['error']
-            ];
+        if (!empty($result["response"])){
+            return KKBPaymentResult::parseErrorData($result);
         };
 
         if (!empty($result['document'])){
-            $kkb = new KKBSign();
-            $kkb->invert();
-            $data = $result['document']['bank_sign'];
-
-            $check = $kkb->checkSign64($data['@attributes']['cert_id'], $data['@value'], Yii::getAlias($this->publicKeyPath));
-
-            $error = false;
-            if ($check == 1) {
-                $checkResult = "[SIGN_GOOD]";
-            } elseif ($check == 0) {
-                $error = true;
-                $checkResult = "[SIGN_BAD]";
-            } else {
-                $error = true;
-                $checkResult = "[SIGN_CHECK_ERROR]: " . $kkb->getErrorStatus();
-            }
-
-            return [
-                'bankError' => false,
-                'checkResult' => $checkResult,
-                'error' => $error,
-                'data' => $result,
-            ];
+            return KKBPaymentResult::parseSuccessData($result);
         };
-        return "[XML_DOCUMENT_UNKNOWN_TYPE]";
+
+        return null;
     }
 }
