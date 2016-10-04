@@ -95,3 +95,38 @@ if (YII_ENV_DEV) {
 </form>
 
 ```
+
+## Обработка результата
+
+Для обработки результата создайте новый экшн в контроллере (URL на него должно быть указано в поле PostLink).
+После этого вызовите метод ```\naffiq\kkb\KKBPayment::paymentResponse($response)```, где `$response` - это ответ ККБ.
+
+Пример базовой реализации:
+```php
+<?php
+class PaymentController extends \yii\web\Controller {
+    //Controller code
+
+    /**
+     *
+     */
+    public function actionProcessResult()
+    {
+        /**
+         * @var $kkb \naffiq\kkb\KKBPayment
+         */
+        $kkb = \Yii::$app->get('kkbPayment');
+
+        $response = \Yii::$app->request->post('response');
+        $paymentResponse = $kkb->processResponse($response);
+
+        // Обработка $paymentResponse
+    }
+    
+}
+?>
+```
+
+В результате исполнения обработки будет возвращен объект класса `naffiq\kkb\KKBPaymentResult`, который содержит
+ все данные об оплате.
+ 
