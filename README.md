@@ -1,4 +1,6 @@
 # yii2-kkb
+[![Code Climate](https://codeclimate.com/github/naffiq/yii2-kkb/badges/gpa.svg)](https://codeclimate.com/github/naffiq/yii2-kkb)
+
 Компонентя для оплаты онлайн в КазКом банке для Yii2.
 
 Перед использованием рекоммендуется ознакомится с работой и циклом оплаты в 
