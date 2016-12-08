@@ -142,7 +142,7 @@ class KKBPaymentResult extends Model
         $data = $response['document']['bank'];
         $object->paymentDate = $data['results']['@attributes']['timestamp'];
 
-        $object->setCustomerAttributes($data['@attributes']['name']);
+        $object->setCustomerAttributes($data['customer']['@attributes']);
         $object->setMerchantAttributes($data['customer']['merchant']['@attributes']);
 
         $orderData = $data['customer']['merchant']['order'];
