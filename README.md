@@ -32,7 +32,7 @@ return [
         // ...
         
         'kkbPayment' => [
-            'class' => 'naffiq\yii2-kkb\KKBPayment',
+            'class' => 'naffiq\kkb\KKBPayment',
             
             // Расположение публичного ключа
             'publicKeyPath' => '@vendor/naffiq/yii2-kkb/payment-keys/test_pub.pem',
