@@ -13,7 +13,7 @@
 Рекоммендуемый способ установки через [composer](https://getcomposer.org/download/).
 
 ```bash
-$ composer install naffiq/yii2-kkb
+$ composer require naffiq/yii2-kkb
 ```
 
 ## Подключение
