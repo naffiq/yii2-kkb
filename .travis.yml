@@ -9,7 +9,7 @@ addons:
     repo_token: 1d0616f7b6a83a05ea671fcbab495da212dcead88e7bd212cfe3b75a57fa1e86
 
 install:
-  - composer global require "fxp/composer-asset-plugin:~1.0.3"
+  - composer global require "fxp/composer-asset-plugin"
   - composer install
 
 script:
