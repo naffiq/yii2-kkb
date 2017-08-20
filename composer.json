@@ -14,7 +14,11 @@
     ],
     "autoload": {
         "psr-4": {
-            "naffiq\\kkb\\": ""
+            "naffiq\\kkb\\": "",
+            "naffiq\\kkb\\exceptions": "exceptions/"
         }
+    },
+    "require-dev": {
+        "phpunit/phpunit": "5.7"
     }
 }

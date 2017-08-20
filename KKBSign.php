@@ -1,6 +1,7 @@
 <?php
 
 namespace naffiq\kkb;
+use naffiq\kkb\exceptions\CertificateException;
 
 /**
  * Class KKBSign
@@ -44,32 +45,31 @@ class KKBSign
      * @param $filename
      * @param null $password
      * @return bool|string
+     * @throws CertificateException
      */
     public function loadPrivateKey($filename, $password = NULL)
     {
         $this->errorCode = 0;
         if (!is_file($filename)) {
-            $this->errorCode = 4;
-            $this->errorMessage = "[KEY_FILE_NOT_FOUND]";
-            return false;
+            throw new CertificateException("[KEY_FILE_NOT_FOUND]", 4);
         };
 
-        $c = file_get_contents($filename);
+        $privateKeyFile = file_get_contents($filename);
 
         if (strlen(trim($password)) > 0) {
-            $privateKey = openssl_get_privatekey($c, $password);
-            $this->parseErrors(openssl_error_string());
+            $privateKey = openssl_get_privatekey($privateKeyFile, $password);
+            $this->checkErrors(openssl_error_string());
         } else {
-            $privateKey = openssl_get_privatekey($c);
-            $this->parseErrors(openssl_error_string());
+            $privateKey = openssl_get_privatekey($privateKeyFile);
+            $this->checkErrors(openssl_error_string());
         };
 
         if (is_resource($privateKey)) {
             $this->privateKey = $privateKey;
-            return $c;
+            return $privateKeyFile;
         }
 
-        return false;
+        throw new CertificateException('Error while reading private key file. Wrong password?', 255);
     }
 
     /**
@@ -148,24 +148,24 @@ class KKBSign
      * @param $str
      * @param $filename
      * @return int
+     *
+     * @throws CertificateException
      */
     private function checkSign($data, $str, $filename)
     {
         $str = $this->checkReverse($str);
 
         if (!is_file($filename)) {
-            $this->errorCode = 4;
-            $this->errorMessage = "[KEY_FILE_NOT_FOUND]";
-            return 2;
+            throw new CertificateException("[KEY_FILE_NOT_FOUND]", 4);
         };
         $this->publicKey = file_get_contents($filename);
 
         $publicKeyId = openssl_get_publickey($this->publicKey);
-        $this->parseErrors(openssl_error_string());
+        $this->checkErrors(openssl_error_string());
 
         if (is_resource($publicKeyId)) {
             $result = openssl_verify($data, $str, $publicKeyId);
-            $this->parseErrors(openssl_error_string());
+            $this->checkErrors(openssl_error_string());
             openssl_free_key($publicKeyId);
             return $result;
         };
@@ -179,38 +179,33 @@ class KKBSign
      * @param $filename
      * @return int
      */
-    function checkSign64($data, $str, $filename)
+    public function checkSign64($data, $str, $filename)
     {
         return $this->checkSign($data, base64_decode($str), $filename);
     }
 
     /**
-     * Parses error to error code and message
+     * Проверяет ошибки функции `openssl_error_string()` и выбрасывает исключение класса
+     * `naffiq\kkb\CertificateException`
      *
      * error:0906D06C - Error reading Certificate. Verify Cert type.
      * error:06065064 - Bad decrypt. Verify your Cert password or Cert type.
      * error:0906A068 - Bad password read. Maybe empty password.
      *
-     * @param $error
+     * @param string|false $error результат функции `openssl_error_string()`
+     * @throws CertificateException
      */
-    private function parseErrors($error)
+    private function checkErrors($error)
     {
-        if (strlen($error) > 0) {
+        if ($error !== false) {
             if (strpos($error, "error:0906D06C") > 0) {
-                $this->errorCode = 1;
-                $this->errorMessage = "Error reading Certificate. Verify Cert type.";
+                throw new CertificateException("Error reading Certificate. Verify Cert type.", 1);
             };
             if (strpos($error, "error:06065064") > 0) {
-                $this->errorCode = 2;
-                $this->errorMessage = "Bad decrypt. Verify your Cert password or Cert type.";
+                throw new CertificateException("Bad decrypt. Verify your Cert password or Cert type.", 2);
             };
             if (strpos($error, "error:0906A068") > 0) {
-                $this->errorCode = 3;
-                $this->errorMessage = "Bad password read. Maybe empty password.";
-            };
-            if ($this->errorCode = 0) {
-                $this->errorCode = 255;
-                $this->errorMessage = $error;
+                throw new CertificateException("Bad password read. Maybe empty password.", 3);
             };
         };
     }
