@@ -1,5 +1,5 @@
 # yii2-kkb
-[![Code Climate](https://codeclimate.com/github/naffiq/yii2-kkb/badges/gpa.svg)](https://codeclimate.com/github/naffiq/yii2-kkb)
+[![Build Status](https://travis-ci.org/naffiq/yii2-kkb.svg?branch=master)](https://travis-ci.org/naffiq/yii2-kkb) [![Code Climate](https://codeclimate.com/github/naffiq/yii2-kkb/badges/gpa.svg)](https://codeclimate.com/github/naffiq/yii2-kkb)
 
 Компонентя для оплаты онлайн в КазКом банке для Yii2.
 

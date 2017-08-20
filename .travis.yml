@@ -1,0 +1,18 @@
+language: php
+php:
+  - '5.6'
+  - '7.0'
+  - '7.1'
+
+addons:
+  code_climate:
+    repo_token: 1d0616f7b6a83a05ea671fcbab495da212dcead88e7bd212cfe3b75a57fa1e86
+
+install:
+  - composer install
+
+script:
+  - ./vendor/bin/phpunit --verbose $PHPUNIT_FLAGS
+
+after_success:
+  - ./vendor/bin/test-reporter
