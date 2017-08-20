@@ -89,11 +89,7 @@ class KKBPayment extends Component
 
         $kkb = new KKBSign();
         $kkb->invert();
-        if (!$kkb->loadPrivateKey(Yii::getAlias($this->privateKeyPath), $this->privateKeyPassword)) {
-            if ($kkb->hasErrors()) {
-                throw new Exception($kkb->getErrorStatus());
-            };
-        }
+        $kkb->loadPrivateKey(Yii::getAlias($this->privateKeyPath), $this->privateKeyPassword);
 
         $result = $this->generateMerchantXML($orderId, $amount, $currencyCode);
 
@@ -167,7 +163,7 @@ class KKBPayment extends Component
      * @param string $response XML response from bank
      * @return null|KKBPaymentResult
      */
-    function processResponse($response) {
+    public function processResponse($response) {
         $result = XML2Array::createArray($response);
 
         if (!empty($result["response"])){
@@ -175,7 +171,7 @@ class KKBPayment extends Component
         };
 
         if (!empty($result['document'])){
-            return KKBPaymentResult::parseSuccessData($result);
+            return KKBPaymentResult::parseSuccessData($result, $this);
         };
 
         return null;

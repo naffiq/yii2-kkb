@@ -111,14 +111,9 @@ class KKBPaymentResult extends Model
      * @param $kkbComponent bool|KKBPayment
      * @return KKBPaymentResult
      */
-    public static function parseSuccessData($response, $kkbComponent = false)
+    public static function parseSuccessData($response, KKBPayment $kkbComponent = null)
     {
-        if (!$kkbComponent) {
-            $kkb = \Yii::$app->get('kkbPayment');
-        } else {
-            $kkb = $kkbComponent;
-        }
-
+        $kkb = $kkbComponent ?: \Yii::$app->get('kkbPayment');
 
         $kkbSign = new KKBSign();
         $kkbSign->invert();
@@ -130,16 +125,10 @@ class KKBPaymentResult extends Model
         $object = new static();
         $object->paymentSuccessful = true;
 
-        if ($check == 1) {
-            $object->signErrors = false;
-        } elseif ($check == 0) {
-            $object->signErrors = true;
-        } else {
-            $object->signErrors = true;
-//            $checkResult = "[SIGN_CHECK_ERROR]: " . $kkbSign->getErrorStatus();
-        }
+        $object->signErrors = $check != 1;
 
         $data = $response['document']['bank'];
+        $object->bankName = $data['@attributes']['name'];
         $object->paymentDate = $data['results']['@attributes']['timestamp'];
 
         $object->setCustomerAttributes($data['customer']['@attributes']);
@@ -157,11 +146,10 @@ class KKBPaymentResult extends Model
     /**
      * Обработка результата, в случае неудачной оплаты
      *
-     * @param $response
-     * @param bool $kkbComponent
+     * @param $response array Массив с данными об ошибке
      * @return KKBPaymentResult
      */
-    public static function parseErrorData($response, $kkbComponent = false)
+    public static function parseErrorData($response)
     {
         $object = new static();
         $object->paymentSuccessful = false;

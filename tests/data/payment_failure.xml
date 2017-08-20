@@ -1,0 +1,4 @@
+<response order_id="123456">
+    <error type="system | auth" time="2006-11-22 12:20:30" code="00">Error Message</error>
+    <session id="1234654656545"/>
+</response>
