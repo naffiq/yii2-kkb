@@ -30,18 +30,6 @@ class KKBSign
     private $invert;
 
     /**
-     * Код ошибки
-     * @var integer
-     */
-    private $errorCode;
-
-    /**
-     * Сообщение ошибки
-     * @var string
-     */
-    private $errorMessage;
-
-    /**
      * @param $filename
      * @param null $password
      * @return bool|string
@@ -49,9 +37,8 @@ class KKBSign
      */
     public function loadPrivateKey($filename, $password = NULL)
     {
-        $this->errorCode = 0;
         if (!is_file($filename)) {
-            throw new CertificateException("[KEY_FILE_NOT_FOUND]", 4);
+            throw new CertificateException("Private key file not found", 4);
         };
 
         $privateKeyFile = file_get_contents($filename);
@@ -92,26 +79,6 @@ class KKBSign
     }
 
     /**
-     * Проверка на наличие ошибок
-     *
-     * @return bool
-     */
-    public function hasErrors()
-    {
-        return $this->errorCode > 0;
-    }
-
-    /**
-     * Статус ошибки
-     *
-     * @return mixed
-     */
-    public function getErrorStatus()
-    {
-        return $this->errorMessage;
-    }
-
-    /**
      * Процесс инверсии строки
      *
      * @param $str
@@ -119,11 +86,7 @@ class KKBSign
      */
     private function checkReverse($str)
     {
-        if ($this->invert == 1) {
-            return strrev($str);
-        }
-
-        return $str;
+        return $this->invert == 1 ? strrev($str) : $str;
     }
 
     /**
@@ -132,14 +95,10 @@ class KKBSign
      */
     private function sign($str)
     {
-        if ($this->privateKey) {
-            openssl_sign($str, $out, $this->privateKey);
-            $out = $this->checkReverse($out);
-            //openssl_free_key($this->privateKey);
-            return $out;
-        }
-
-        return false;
+        openssl_sign($str, $out, $this->privateKey);
+        $out = $this->checkReverse($out);
+        openssl_free_key($this->privateKey);
+        return $out;
     }
 
     /**
@@ -156,7 +115,7 @@ class KKBSign
         $str = $this->checkReverse($str);
 
         if (!is_file($filename)) {
-            throw new CertificateException("[KEY_FILE_NOT_FOUND]", 4);
+            throw new CertificateException("Public key file not found", 4);
         };
         $this->publicKey = file_get_contents($filename);
 
@@ -170,7 +129,9 @@ class KKBSign
             return $result;
         };
 
-        return 3;
+        // @codeCoverageIgnoreStart
+        throw new CertificateException('Unexpected exception while reading public key file, report with data to https://github.com/naffiq/yii2-kkb');
+        // @codeCoverageIgnoreEnd
     }
 
     /**
@@ -192,6 +153,7 @@ class KKBSign
      * error:06065064 - Bad decrypt. Verify your Cert password or Cert type.
      * error:0906A068 - Bad password read. Maybe empty password.
      *
+     * @codeCoverageIgnore
      * @param string|false $error результат функции `openssl_error_string()`
      * @throws CertificateException
      */
