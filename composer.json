@@ -15,7 +15,7 @@
     "autoload": {
         "psr-4": {
             "naffiq\\kkb\\": "",
-            "naffiq\\kkb\\exceptions": "exceptions/"
+            "naffiq\\kkb\\exceptions\\": "exceptions/"
         }
     },
     "require-dev": {
