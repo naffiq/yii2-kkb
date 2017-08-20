@@ -1,7 +1,7 @@
 # yii2-kkb
 [![Build Status](https://travis-ci.org/naffiq/yii2-kkb.svg?branch=master)](https://travis-ci.org/naffiq/yii2-kkb) [![Test Coverage](https://codeclimate.com/github/naffiq/yii2-kkb/badges/coverage.svg)](https://codeclimate.com/github/naffiq/yii2-kkb/coverage) [![Code Climate](https://codeclimate.com/github/naffiq/yii2-kkb/badges/gpa.svg)](https://codeclimate.com/github/naffiq/yii2-kkb) [![Issue Count](https://codeclimate.com/github/naffiq/yii2-kkb/badges/issue_count.svg)](https://codeclimate.com/github/naffiq/yii2-kkb) 
 
-Компонентя для оплаты онлайн в КазКом банке для Yii2.
+Компонент для оплаты онлайн через КазКом банк для Yii2.
 
 Перед использованием рекоммендуется ознакомится с работой и циклом оплаты в 
 [документации банка](https://testpay.kkb.kz/doc/htm/)
