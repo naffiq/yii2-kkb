@@ -11,8 +11,8 @@ class KKBPaymentTest extends \PHPUnit\Framework\TestCase
     public function testNewPayment()
     {
         $kkbService = new \naffiq\kkb\KKBPayment([
-            'publicKeyPath' => __DIR__ . './../payment-keys/test_pub.pem',
-            'privateKeyPath' => __DIR__ . './../payment-keys/test_prv.pem',
+            'publicKeyPath' => __DIR__ . '/../payment-keys/test_pub.pem',
+            'privateKeyPath' => __DIR__ . '/../payment-keys/test_prv.pem',
             'privateKeyPassword' => 'nissan',
             'merchantId' => '92061101',
             'merchantCertificateId' => '00C182B189',
