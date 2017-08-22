@@ -101,7 +101,7 @@ if (YII_ENV_DEV) {
 ## Обработка результата
 
 Для обработки результата создайте новый экшн в контроллере (URL на него должно быть указано в поле PostLink).
-После этого вызовите метод ```\naffiq\kkb\KKBPayment::paymentResponse($response)```, где `$response` - это ответ ККБ.
+После этого вызовите метод ```\naffiq\kkb\KKBPayment::processResponse($response)```, где `$response` - это ответ ККБ.
 
 Пример базовой реализации:
 ```php
