@@ -171,7 +171,7 @@ class KKBPayment extends Component
         };
 
         if (!empty($result['document'])){
-            return KKBPaymentResult::parseSuccessData($result, $this);
+            return KKBPaymentResult::parseSuccessData($result, $response, $this);
         };
 
         return null;

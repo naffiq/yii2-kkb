@@ -25,7 +25,7 @@ class KKBPaymentTest extends \PHPUnit\Framework\TestCase
     public function testPaymentSuccessfulResponseParse()
     {
         $kkbService = new \naffiq\kkb\KKBPayment([
-            'publicKeyPath' => __DIR__ . '/../payment-keys/test_pub.pem',
+            'publicKeyPath' => __DIR__ . '/../payment-keys/kkbca.pem',
             'privateKeyPath' => __DIR__ . '/../payment-keys/test_prv.pem',
             'privateKeyPassword' => 'nissan',
             'merchantId' => '92061101',
@@ -38,28 +38,28 @@ class KKBPaymentTest extends \PHPUnit\Framework\TestCase
         $result = $kkbService->processResponse($xmlResponse);
         $this->assertInstanceOf(\naffiq\kkb\KKBPaymentResult::className(), $result);
         $this->assertTrue($result->paymentSuccessful);
-        $this->assertTrue($result->signErrors);
+        $this->assertFalse($result->signErrors);
 
         $this->assertEquals('Kazkommertsbank JSC', $result->bankName);
-        $this->assertEquals('John Cardholder', $result->customerName);
-        $this->assertEquals('klient@mymail.com', $result->customerEmail);
-        $this->assertEquals('223322', $result->customerPhone);
+        $this->assertEquals('TSET TEST', $result->customerName);
+        $this->assertEquals('abdu.galymzhan@gmail.com', $result->customerEmail);
+        $this->assertEquals('', $result->customerPhone);
 
-        $this->assertEquals('7269C18D00010000005E', $result->merchantCertId);
-        $this->assertEquals('Shop Name', $result->merchantName);
-        $this->assertEquals('92061103', $result->merchantId);
+        $this->assertEquals('00C182B189', $result->merchantCertId);
+        $this->assertEquals('Test shop', $result->merchantName);
+        $this->assertEquals('92061101', $result->merchantId);
 
-        $this->assertEquals('000282', $result->orderId);
-        $this->assertEquals('3100', $result->orderAmount);
+        $this->assertEquals('400124', $result->orderId);
+        $this->assertEquals('1000', $result->orderAmount);
         $this->assertEquals('398', $result->orderCurrency);
 
         $this->assertEquals('00', $result->paymentResponseCode);
-        $this->assertEquals('2006-11-22 12:20:30 ', $result->paymentDate);
-        $this->assertEquals('109600746891', $result->paymentReference);
-        $this->assertEquals('730190', $result->paymentApprovalCode);
-        $this->assertEquals('KAZ', $result->paymentCardBin);
+        $this->assertEquals('2017-11-24 19:08:56', $result->paymentDate);
+        $this->assertEquals('171124190855', $result->paymentReference);
+        $this->assertEquals('190855', $result->paymentApprovalCode);
+        $this->assertEquals('', $result->paymentCardBin);
         $this->assertEquals('No', $result->paymentSecure);
-        $this->assertEquals('6A2D7673A8EEF25A2C33D67CB5AAD091', $result->paymentCHash);
+        $this->assertEquals('13988BBF7C6649F799F36A4808490A3E', $result->paymentCHash);
     }
 
     public function testWrongPublicKey()
@@ -85,7 +85,7 @@ class KKBPaymentTest extends \PHPUnit\Framework\TestCase
     public function testPaymentFailureResponseParse()
     {
         $kkbService = new \naffiq\kkb\KKBPayment([
-            'publicKeyPath' => __DIR__ . '/../payment-keys/test_pub.pem',
+            'publicKeyPath' => __DIR__ . '/../payment-keys/kkbca.pem',
             'privateKeyPath' => __DIR__ . '/../payment-keys/test_prv.pem',
             'privateKeyPassword' => 'nissan',
             'merchantId' => '92061101',
