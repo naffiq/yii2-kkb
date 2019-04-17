@@ -3,7 +3,7 @@
     "description": "Yii2 component for KazKom bank online payment",
     "require": {
         "yiisoft/yii2": "^2.0",
-        "rquadling/lalit": "^1.5"
+        "digitickets/lalit": "^3.1"
     },
     "license": "MIT",
     "authors": [
